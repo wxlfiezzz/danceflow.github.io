@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Запись на курс танцев | DanceFlow</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,49 +17,146 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
+        
         body {
             background: radial-gradient(circle at 20% 30%, #1a0b2e, #0a0515);
             min-height: 100vh;
             transition: background 0.3s ease;
+            overflow-x: hidden;
         }
+        
         body.light-theme {
             background: radial-gradient(circle at 20% 30%, #fdf2f8, #fce7f3);
         }
-        body.light-theme .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+        
+        /* Стили для скролла */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
         }
-        body.light-theme .glass-card p,
-        body.light-theme .glass-card h3,
-        body.light-theme .glass-card li,
-        body.light-theme .glass-card span:not(.text-pink-400) {
-            color: #1a1a2e !important;
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
         }
-        body.light-theme .testimonial-card {
-            background: rgba(255, 255, 255, 0.6);
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ec4899;
+            border-radius: 10px;
         }
-        body.light-theme .custom-select-trigger,
-        body.light-theme input,
-        body.light-theme .custom-select-dropdown {
-            background: rgba(255, 255, 255, 0.8);
-            color: #1a1a2e;
+        
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        body.light-theme .custom-select-option {
-            color: #1a1a2e;
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
-        body.light-theme .custom-select-option .option-desc {
-            color: #6b7280;
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out forwards;
         }
-        body.light-theme .schedule-table td {
-            color: #1a1a2e;
+        
+        .animate-pulse-slow {
+            animation: pulse 2s infinite;
         }
-        body.light-theme .direction-tag {
-            background: rgba(236, 72, 153, 0.3);
+        
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: rgba(10, 5, 21, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            padding: 80px 20px 20px;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
         }
-        body.light-theme .timer-card {
-            background: rgba(236, 72, 153, 0.1);
+        
+        .mobile-menu.open {
+            right: 0;
         }
+        
+        .mobile-menu a {
+            display: block;
+            padding: 15px 0;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: color 0.2s;
+        }
+        
+        .mobile-menu a:hover, .mobile-menu a:active {
+            color: #ec4899;
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Свайпы для мобильных */
+        .swipe-container {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .swipe-item {
+            scroll-snap-align: start;
+        }
+        
+        /* Улучшенные кнопки для тач-устройств */
+        button, .custom-select-trigger, .nav-link {
+            cursor: pointer;
+            -webkit-tap-highlight-color: rgba(236, 72, 153, 0.3);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        /* Адаптивные карточки */
+        @media (max-width: 768px) {
+            .glass-card {
+                border-radius: 1rem;
+            }
+            
+            .price-card {
+                min-width: 250px;
+            }
+        }
+        
+        /* Остальные стили из предыдущей версии */
         .mouse-glow {
             position: fixed;
             top: 0;
@@ -71,13 +168,16 @@
             background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(236, 72, 153, 0.25) 0%, rgba(10, 5, 21, 0.96) 70%);
             transition: background 0.08s linear;
         }
+        
         body.light-theme .mouse-glow {
             background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(236, 72, 153, 0.15) 0%, rgba(252, 231, 243, 0.96) 70%);
         }
+        
         .content-wrapper {
             position: relative;
             z-index: 10;
         }
+        
         .error-message {
             font-size: 0.75rem;
             color: #f87171;
@@ -86,10 +186,12 @@
             align-items: center;
             gap: 0.25rem;
         }
+        
         .input-error {
             border-color: #ef4444 !important;
             background-color: rgba(254, 226, 226, 0.2) !important;
         }
+        
         .toast-notify {
             position: fixed;
             bottom: 24px;
@@ -110,9 +212,11 @@
             max-width: 90vw;
             text-align: center;
         }
+        
         .toast-show {
             opacity: 1;
         }
+        
         .loading-spinner {
             display: inline-block;
             width: 18px;
@@ -124,33 +228,85 @@
             margin-right: 8px;
             vertical-align: middle;
         }
+        
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
         button:disabled {
             opacity: 0.7;
             cursor: not-allowed;
         }
+        
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 1.5rem;
         }
+        
+        body.light-theme .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        body.light-theme .glass-card p,
+        body.light-theme .glass-card h3,
+        body.light-theme .glass-card li,
+        body.light-theme .glass-card span:not(.text-pink-400) {
+            color: #1a1a2e !important;
+        }
+        
+        body.light-theme .testimonial-card {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        
+        body.light-theme .custom-select-trigger,
+        body.light-theme input,
+        body.light-theme .custom-select-dropdown {
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a1a2e;
+        }
+        
+        body.light-theme .custom-select-option {
+            color: #1a1a2e;
+        }
+        
+        body.light-theme .custom-select-option .option-desc {
+            color: #6b7280;
+        }
+        
+        body.light-theme .schedule-table td {
+            color: #1a1a2e;
+        }
+        
+        body.light-theme .direction-tag {
+            background: rgba(236, 72, 153, 0.3);
+        }
+        
+        body.light-theme .timer-card {
+            background: rgba(236, 72, 153, 0.1);
+        }
+        
+        body.light-theme label {
+            color: #1a1a2e;
+        }
+        
         .testimonial-card {
             transition: transform 0.2s, box-shadow 0.2s;
             background: rgba(255,255,255,0.04);
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255,255,255,0.1);
         }
-        .testimonial-card:hover {
-            transform: translateY(-4px);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.3);
+        
+        .testimonial-card:active {
+            transform: scale(0.98);
         }
+        
         .nav-link {
             position: relative;
         }
+        
         .nav-link::after {
             content: '';
             position: absolute;
@@ -161,27 +317,30 @@
             background-color: #ec4899;
             transition: width 0.3s;
         }
-        .nav-link:hover::after {
+        
+        .nav-link:hover::after, .nav-link.active::after {
             width: 100%;
         }
+        
         input, .checkbox-custom, select {
             background-color: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.2);
             color: white;
         }
+        
         input::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
+        
         input:focus, select:focus {
             border-color: #ec4899;
             outline: none;
         }
+        
         label {
             color: #e2e8f0;
         }
-        body.light-theme label {
-            color: #1a1a2e;
-        }
+        
         #dance-map {
             width: 100%;
             height: 400px;
@@ -191,27 +350,39 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
+        
+        @media (max-width: 768px) {
+            #dance-map {
+                height: 300px;
+            }
+        }
+        
         .schedule-table {
             width: 100%;
             border-collapse: collapse;
         }
+        
         .schedule-table th, .schedule-table td {
             padding: 12px 8px;
             text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
         .schedule-table th {
             color: #ec4899;
             font-weight: 600;
             font-size: 14px;
         }
+        
         .schedule-table td {
             color: #e2e8f0;
             font-size: 14px;
         }
+        
         .schedule-table tr:hover {
             background: rgba(236, 72, 153, 0.1);
         }
+        
         .direction-tag {
             display: inline-block;
             background: rgba(236, 72, 153, 0.2);
@@ -220,6 +391,7 @@
             font-size: 12px;
             margin: 2px;
         }
+        
         .timer-card {
             background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(190, 24, 93, 0.15));
             border: 1px solid rgba(236, 72, 153, 0.3);
@@ -228,22 +400,26 @@
             margin-bottom: 1rem;
             text-align: center;
         }
+        
         .timer-title {
             font-size: 0.8rem;
             color: #fce7f3;
             letter-spacing: 1px;
             margin-bottom: 0.5rem;
         }
+        
         .timer-digits {
             display: flex;
             justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
         }
+        
         .timer-block {
             text-align: center;
             min-width: 60px;
         }
+        
         .timer-number {
             font-size: 2rem;
             font-weight: bold;
@@ -253,15 +429,35 @@
             font-family: monospace;
             color: #ec4899;
         }
+        
         .timer-label {
             font-size: 0.7rem;
             color: #9ca3af;
             margin-top: 0.25rem;
         }
+        
+        @media (max-width: 640px) {
+            .timer-block {
+                min-width: 45px;
+            }
+            .timer-number {
+                font-size: 1.5rem;
+            }
+            .schedule-table th, .schedule-table td {
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+            .direction-tag {
+                font-size: 9px;
+                padding: 2px 6px;
+            }
+        }
+        
         .custom-select {
             position: relative;
             width: 100%;
         }
+        
         .custom-select-trigger {
             width: 100%;
             padding: 12px 16px;
@@ -275,23 +471,28 @@
             transition: all 0.3s ease;
             color: white;
         }
+        
         .custom-select-trigger .placeholder {
             color: #9ca3af;
         }
+        
         .custom-select-trigger .selected-value {
             color: white;
         }
+        
         .custom-select-trigger .arrow {
             transition: transform 0.3s ease;
             color: #ec4899;
         }
+        
         .custom-select-trigger.open .arrow {
             transform: rotate(180deg);
         }
-        .custom-select-trigger:hover {
-            border-color: #ec4899;
-            background: rgba(255, 255, 255, 0.1);
+        
+        .custom-select-trigger:active {
+            transform: scale(0.99);
         }
+        
         .custom-select-dropdown {
             position: absolute;
             top: 100%;
@@ -310,11 +511,13 @@
             transition: all 0.3s ease;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
+        
         .custom-select-dropdown.show {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
+        
         .custom-select-option {
             padding: 12px 16px;
             cursor: pointer;
@@ -325,38 +528,40 @@
             gap: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
+        
         .custom-select-option:last-child {
             border-bottom: none;
         }
-        .custom-select-option:hover {
-            background: rgba(236, 72, 153, 0.2);
+        
+        .custom-select-option:active {
+            background: rgba(236, 72, 153, 0.3);
         }
+        
         .custom-select-option.selected {
             background: rgba(236, 72, 153, 0.3);
             color: white;
         }
+        
         .custom-select-option .emoji {
             font-size: 20px;
             min-width: 32px;
         }
+        
         .custom-select-option .option-text {
             flex: 1;
             font-weight: 500;
         }
+        
         .custom-select-option .option-desc {
             font-size: 11px;
             color: #9ca3af;
         }
+        
         .custom-select.input-error .custom-select-trigger {
             border-color: #ef4444;
             background-color: rgba(254, 226, 226, 0.2);
         }
-        @media (max-width: 640px) {
-            .timer-block { min-width: 45px; }
-            .timer-number { font-size: 1.5rem; }
-            .schedule-table th, .schedule-table td { padding: 8px 4px; font-size: 11px; }
-            .direction-tag { font-size: 9px; padding: 2px 6px; }
-        }
+        
         .counter-number {
             font-size: 3rem;
             font-weight: bold;
@@ -365,30 +570,125 @@
             background-clip: text;
             color: transparent;
         }
+        
         .gallery-img {
             transition: transform 0.3s ease;
             cursor: pointer;
         }
-        .gallery-img:hover {
-            transform: scale(1.05);
+        
+        .gallery-img:active {
+            transform: scale(0.98);
         }
+        
         .hover-scale {
             transition: all 0.3s ease;
         }
-        .hover-scale:hover {
-            transform: scale(1.05);
+        
+        .hover-scale:active {
+            transform: scale(0.98);
         }
+        
+        /* Горизонтальная прокрутка для цен на мобильных */
+        .prices-scroll {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 10px;
+        }
+        
         .price-card {
+            scroll-snap-align: start;
+            min-width: 200px;
+        }
+        
+        @media (max-width: 768px) {
+            .prices-scroll {
+                display: flex;
+                gap: 16px;
+            }
+            .price-card {
+                min-width: 200px;
+                flex-shrink: 0;
+            }
+        }
+        
+        /* Бургер-меню */
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+            position: relative;
+        }
+        
+        .burger span {
+            width: 25px;
+            height: 2px;
+            background: white;
             transition: all 0.3s ease;
         }
-        .price-card:hover {
-            transform: translateY(-10px);
+        
+        .burger.open span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 6px);
+        }
+        
+        .burger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .burger.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -6px);
+        }
+        
+        @media (max-width: 768px) {
+            .burger {
+                display: flex;
+            }
+            .desktop-nav {
+                display: none;
+            }
+        }
+        
+        /* Стили для телефонов */
+        @media (max-width: 768px) {
+            .container-padding {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            
+            h2 {
+                font-size: 1.75rem !important;
+            }
+            
+            .glass-card {
+                border-radius: 1rem;
+            }
+            
+            input, .custom-select-trigger, button {
+                font-size: 16px !important;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="mouse-glow" id="mouseGlow"></div>
+
+<!-- Мобильное меню -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#about" class="mobile-nav-link">О нас</a>
+    <a href="#teachers" class="mobile-nav-link">Преподаватели</a>
+    <a href="#schedule" class="mobile-nav-link">Расписание</a>
+    <a href="#prices" class="mobile-nav-link">Цены</a>
+    <a href="#gallery" class="mobile-nav-link">Галерея</a>
+    <a href="#reviews" class="mobile-nav-link">Отзывы</a>
+    <a href="#faq" class="mobile-nav-link">FAQ</a>
+    <a href="#contact" class="mobile-nav-link">Контакты</a>
+    <a href="#enroll" class="bg-pink-600/70 hover:bg-pink-600 px-4 py-2 rounded-full transition block text-center mt-4">Записаться</a>
+</div>
 
 <div class="content-wrapper">
     <header class="bg-black/40 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
@@ -399,7 +699,9 @@
                 </svg>
                 <span class="font-bold text-xl text-white tracking-tight">DanceFlow</span>
             </div>
-            <nav class="flex flex-wrap gap-6 text-sm md:text-base font-medium text-gray-200">
+            
+            <!-- Десктоп навигация -->
+            <nav class="desktop-nav flex flex-wrap gap-6 text-sm md:text-base font-medium text-gray-200">
                 <a href="#about" class="nav-link hover:text-pink-300 transition">О нас</a>
                 <a href="#teachers" class="nav-link hover:text-pink-300 transition">Преподаватели</a>
                 <a href="#schedule" class="nav-link hover:text-pink-300 transition">Расписание</a>
@@ -410,24 +712,34 @@
                 <a href="#contact" class="nav-link hover:text-pink-300 transition">Контакты</a>
                 <a href="#enroll" class="bg-pink-600/70 hover:bg-pink-600 px-4 py-1.5 rounded-full transition">Записаться</a>
             </nav>
-            <button id="themeToggle" class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition">
-                <svg id="themeIcon" class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                </svg>
-            </button>
+            
+            <div class="flex items-center gap-2">
+                <button id="themeToggle" class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition">
+                    <svg id="themeIcon" class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </button>
+                
+                <!-- Бургер-меню для мобильных -->
+                <div class="burger" id="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
         
-        <!-- Секция "О нас" (остается без изменений) -->
-        <section id="about" class="mb-20 scroll-mt-20">
+        <!-- Секция "О нас" -->
+        <section id="about" class="mb-20 scroll-mt-20 animate-fadeInUp">
             <div class="text-center mb-10">
                 <span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold backdrop-blur-sm">Танцуй с душой</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">О школе танцев DanceFlow</h2>
                 <div class="w-24 h-1 bg-pink-400 mx-auto mt-3 rounded-full"></div>
             </div>
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-3 gap-6">
                 <div class="glass-card p-6 hover:bg-white/10 transition-all">
                     <div class="bg-pink-500/20 w-12 h-12 rounded-full flex items-center justify-center mb-4">
                         <svg class="h-6 w-6 text-pink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -459,7 +771,7 @@
         </section>
 
         <!-- Секция преподавателей -->
-        <section id="teachers" class="mb-20 scroll-mt-20">
+        <section id="teachers" class="mb-20 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.1s">
             <div class="text-center mb-10">
                 <span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold backdrop-blur-sm">👨‍🏫 Наши преподаватели</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Кто ведёт занятия</h2>
@@ -494,7 +806,7 @@
         </section>
 
         <!-- Секция расписания -->
-        <section id="schedule" class="mb-20 scroll-mt-20">
+        <section id="schedule" class="mb-20 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.2s">
             <div class="text-center mb-10">
                 <span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold backdrop-blur-sm">💃 Расписание занятий</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Выбери своё направление</h2>
@@ -502,15 +814,17 @@
                 <p class="text-gray-300 mt-4 max-w-2xl mx-auto">Мы предлагаем занятия для любого уровня подготовки. Выбери направление, которое тебе по душе!</p>
             </div>
             <div class="glass-card overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="schedule-table">
-                        <thead><tr><th>Время</th><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr></thead>
+                <div class="overflow-x-auto swipe-container">
+                    <table class="schedule-table min-w-[600px]">
+                        <thead>
+                            <tr><th>Время</th><th>Пн</th><th>Вт</th><th>Ср</th><th>Чт</th><th>Пт</th><th>Сб</th><th>Вс</th></tr>
+                        </thead>
                         <tbody>
                             <tr><td class="font-semibold text-pink-300">10:00</td><td><span class="direction-tag">Хастл</span><br><span class="text-xs text-gray-400">Начинающие</span></td><td><span class="direction-tag">Кизомба</span><br><span class="text-xs text-gray-400">Начинающие</span></td><td><span class="direction-tag">Бачата</span><br><span class="text-xs text-gray-400">Начинающие</span></td><td><span class="direction-tag">Танго</span><br><span class="text-xs text-gray-400">Начинающие</span></td><td><span class="direction-tag">Контемп</span><br><span class="text-xs text-gray-400">Начинающие</span></td><td><span class="direction-tag">Hip-Hop</span><br><span class="text-xs text-gray-400">Дети</span></td><td><span class="direction-tag">Дэнсхолл</span><br><span class="text-xs text-gray-400">Начинающие</span></td></tr>
                             <tr><td class="font-semibold text-pink-300">12:00</td><td><span class="direction-tag">Сальса</span><br><span class="text-xs text-gray-400">Средний</span></td><td><span class="direction-tag">Реггетон</span><br><span class="text-xs text-gray-400">Средний</span></td><td><span class="direction-tag">Хастл</span><br><span class="text-xs text-gray-400">Средний</span></td><td><span class="direction-tag">Кизомба</span><br><span class="text-xs text-gray-400">Средний</span></td><td><span class="direction-tag">Бачата</span><br><span class="text-xs text-gray-400">Средний</span></td><td><span class="direction-tag">Танго</span><br><span class="text-xs text-gray-400">Средний</span></td><td><span class="direction-tag">Контемп</span><br><span class="text-xs text-gray-400">Средний</span></td></tr>
-                            <tr><td class="font-semibold text-pink-300">15:00</td><td><span class="direction-tag">Джаз-модерн</span><br><span class="text-xs text-gray-400">Продвинутые</span></td><td><span class="direction-tag">Современные</span><br><span class="text-xs text-gray-400">Продвинутые</span></td><td><span class="direction-tag">Hip-Hop</span><br><span class="text-xs text-gray-400">Продвинутые</span></td><td><span class="direction-tag">Break Dance</span><br><span class="text-xs text-gray-400">Продвинутые</span></td><td><span class="direction-tag">Popping</span><br><span class="text-xs text-gray-400">Продвинутые</span></td><td><span class="direction-tag">Джаз-фанк</span><br><span class="text-xs text-gray-400">Продвинутые</span></td><td><span class="direction-tag">Vogue</span><br><span class="text-xs text-gray-400">Продвинутые</span></td></tr>
+                            <tr><td class="font-semibold text-pink-300">15:00</td><td colspan="7" class="text-center"><span class="direction-tag">Продвинутые группы — Джаз-модерн, Современные, Hip-Hop, Break Dance, Popping, Vogue</span></td></tr>
                             <tr><td class="font-semibold text-pink-300">17:00</td><td colspan="7" class="text-center"><span class="direction-tag">Танцы для начинающих — Базовый курс</span></td></tr>
-                            <tr><td class="font-semibold text-pink-300">19:00</td><td><span class="direction-tag">Хастл</span><br><span class="text-xs text-gray-400">Вечерняя</span></td><td><span class="direction-tag">Кизомба</span><br><span class="text-xs text-gray-400">Вечерняя</span></td><td><span class="direction-tag">Бачата</span><br><span class="text-xs text-gray-400">Вечерняя</span></td><td><span class="direction-tag">Сальса</span><br><span class="text-xs text-gray-400">Вечерняя</span></td><td><span class="direction-tag">Реггетон</span><br><span class="text-xs text-gray-400">Вечерняя</span></td><td colspan="2" class="text-center"><span class="direction-tag">Танцевальная вечеринка 19:00-23:00</span></td></tr>
+                            <tr><td class="font-semibold text-pink-300">19:00</td><td colspan="5" class="text-center"><span class="direction-tag">Вечерние группы — Хастл, Кизомба, Бачата, Сальса, Реггетон</span></td><td colspan="2" class="text-center"><span class="direction-tag">Танцевальная вечеринка 19:00-23:00</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -520,44 +834,44 @@
             </div>
         </section>
 
-        <!-- Секция цен -->
-        <section id="prices" class="mb-20 scroll-mt-20">
+        <!-- Секция цен (горизонтальная прокрутка на мобильных) -->
+        <section id="prices" class="mb-20 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.3s">
             <div class="text-center mb-10">
                 <span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold backdrop-blur-sm">💰 Стоимость</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Абонементы и цены</h2>
                 <div class="w-24 h-1 bg-pink-400 mx-auto mt-3 rounded-full"></div>
             </div>
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="glass-card p-6 text-center hover:scale-105 transition-all">
+            <div class="prices-scroll md:grid md:grid-cols-4 md:gap-6 flex md:flex-none gap-4">
+                <div class="glass-card p-6 text-center hover:scale-105 transition-all price-card">
                     <h3 class="text-xl font-bold text-white mb-2">Разовое</h3>
                     <p class="text-3xl font-bold text-pink-400 mb-2">800 ₽</p>
                     <p class="text-gray-300 text-sm">1 занятие</p>
-                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600/50 hover:bg-pink-600 px-4 py-2 rounded-full text-sm transition">Выбрать</button>
+                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600/50 hover:bg-pink-600 px-4 py-2 rounded-full text-sm transition w-full">Выбрать</button>
                 </div>
-                <div class="glass-card p-6 text-center border border-pink-500 scale-105 relative">
-                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white text-xs px-3 py-1 rounded-full">Популярный</div>
+                <div class="glass-card p-6 text-center border border-pink-500 scale-105 relative price-card">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap">Популярный</div>
                     <h3 class="text-xl font-bold text-white mb-2">4 занятия</h3>
                     <p class="text-3xl font-bold text-pink-400 mb-2">2 800 ₽</p>
                     <p class="text-gray-300 text-sm">700 ₽/занятие</p>
-                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-full text-sm transition">Выбрать</button>
+                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-full text-sm transition w-full">Выбрать</button>
                 </div>
-                <div class="glass-card p-6 text-center hover:scale-105 transition-all">
+                <div class="glass-card p-6 text-center hover:scale-105 transition-all price-card">
                     <h3 class="text-xl font-bold text-white mb-2">8 занятий</h3>
                     <p class="text-3xl font-bold text-pink-400 mb-2">5 200 ₽</p>
                     <p class="text-gray-300 text-sm">650 ₽/занятие</p>
-                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600/50 hover:bg-pink-600 px-4 py-2 rounded-full text-sm transition">Выбрать</button>
+                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600/50 hover:bg-pink-600 px-4 py-2 rounded-full text-sm transition w-full">Выбрать</button>
                 </div>
-                <div class="glass-card p-6 text-center hover:scale-105 transition-all">
+                <div class="glass-card p-6 text-center hover:scale-105 transition-all price-card">
                     <h3 class="text-xl font-bold text-white mb-2">Безлимит</h3>
                     <p class="text-3xl font-bold text-pink-400 mb-2">7 900 ₽</p>
                     <p class="text-gray-300 text-sm">Безлимит на месяц</p>
-                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600/50 hover:bg-pink-600 px-4 py-2 rounded-full text-sm transition">Выбрать</button>
+                    <button onclick="document.getElementById('enroll').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-pink-600/50 hover:bg-pink-600 px-4 py-2 rounded-full text-sm transition w-full">Выбрать</button>
                 </div>
             </div>
         </section>
 
         <!-- Секция галереи -->
-        <section id="gallery" class="mb-20 scroll-mt-20">
+        <section id="gallery" class="mb-20 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.4s">
             <div class="text-center mb-10">
                 <span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold backdrop-blur-sm">📸 Галерея</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Моменты с занятий</h2>
@@ -565,31 +879,26 @@
             </div>
             <div class="grid md:grid-cols-3 gap-4">
                 <div class="glass-card overflow-hidden gallery-img">
-                    <img src="images/photo1.jpg" alt="Танцы" class="w-full h-64 object-cover">
+                    <img src="https://placehold.co/600x400/ec4899/white?text=Танцы+1" alt="Танцы" class="w-full h-64 object-cover">
                 </div>
                 <div class="glass-card overflow-hidden gallery-img">
-                    <img src="images/photo2.png" alt="Танцы" class="w-full h-64 object-cover">
+                    <img src="https://placehold.co/600x400/ec4899/white?text=Танцы+2" alt="Танцы" class="w-full h-64 object-cover">
                 </div>
                 <div class="glass-card overflow-hidden gallery-img">
-                    <img src="images/photo3.jpg" alt="Танцы" class="w-full h-64 object-cover">
+                    <img src="https://placehold.co/600x400/ec4899/white?text=Танцы+3" alt="Танцы" class="w-full h-64 object-cover">
                 </div>
             </div>
         </section>
 
-        <!-- Секция формы записи с DDoS защитой -->
-        <section id="enroll" class="scroll-mt-20 mb-20">
+        <!-- Секция формы записи -->
+        <section id="enroll" class="scroll-mt-20 mb-20 animate-fadeInUp" style="animation-delay: 0.5s">
             <div class="max-w-4xl mx-auto glass-card overflow-hidden">
                 <div class="bg-gradient-to-r from-pink-700/80 to-rose-700/80 px-6 py-7 md:px-8 text-center backdrop-blur-sm">
                     <span class="inline-block px-3 py-1 bg-white/20 rounded-full text-white text-xs font-semibold tracking-wide mb-2">💃 Набор в группы</span>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Запись на курс танцев</h1>
+                    <h1 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight">Запись на курс танцев</h1>
                     <p class="text-pink-100 mt-2 max-w-md mx-auto text-sm md:text-base">Старт нового потока — через 1 неделю. Успей записаться!</p>
                 </div>
                 <div class="p-6 md:p-8">
-                    <!-- DDOS Защита: Баннер с предупреждением -->
-                    <div id="securityNotice" class="mb-4 p-3 bg-yellow-500/20 border border-yellow-500/50 rounded-lg text-center hidden">
-                        <p class="text-yellow-300 text-xs">🛡️ Обнаружена подозрительная активность. Пожалуйста, подтвердите, что вы человек.</p>
-                    </div>
-
                     <div class="timer-card" id="timerCard">
                         <div class="timer-title">⏰ ДО СТАРТА НОВОГО ПОТОКА ОСТАЛОСЬ:</div>
                         <div class="timer-digits">
@@ -600,26 +909,35 @@
                         </div>
                     </div>
 
-                    <form id="enrollForm" class="space-y-6" autocomplete="off">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div><label class="block text-sm font-semibold text-gray-200 mb-1">Фамилия <span class="text-red-400">*</span></label>
-                            <input type="text" id="lastName" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="Иванова">
-                            <div id="lastNameError" class="error-message hidden"></div></div>
-                            <div><label class="block text-sm font-semibold text-gray-200 mb-1">Имя <span class="text-red-400">*</span></label>
-                            <input type="text" id="firstName" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="Анна">
-                            <div id="firstNameError" class="error-message hidden"></div></div>
+                    <form id="enrollForm" class="space-y-5 md:space-y-6" autocomplete="off">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-200 mb-1">Фамилия <span class="text-red-400">*</span></label>
+                                <input type="text" id="lastName" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="Иванова">
+                                <div id="lastNameError" class="error-message hidden"></div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-200 mb-1">Имя <span class="text-red-400">*</span></label>
+                                <input type="text" id="firstName" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="Анна">
+                                <div id="firstNameError" class="error-message hidden"></div>
+                            </div>
                         </div>
                         
-                        <div><label class="block text-sm font-semibold text-gray-200 mb-1">Email <span class="text-red-400">*</span></label>
-                        <input type="email" id="email" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="dance@example.com">
-                        <div id="emailError" class="error-message hidden"></div></div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-200 mb-1">Email <span class="text-red-400">*</span></label>
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="dance@example.com">
+                            <div id="emailError" class="error-message hidden"></div>
+                        </div>
 
-                        <div><label class="block text-sm font-semibold text-gray-200 mb-1">Телефон <span class="text-red-400">*</span></label>
-                        <input type="tel" id="phone" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="+7 999 123 45 67">
-                        <div id="phoneError" class="error-message hidden"></div>
-                        <p class="text-xs text-gray-400 mt-1">Формат: +7 999 123 45 67 или 89123456789</p></div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-200 mb-1">Телефон <span class="text-red-400">*</span></label>
+                            <input type="tel" id="phone" class="w-full px-4 py-3 border border-white/20 rounded-xl bg-white/5 text-white" placeholder="+7 999 123 45 67">
+                            <div id="phoneError" class="error-message hidden"></div>
+                            <p class="text-xs text-gray-400 mt-1">Формат: +7 999 123 45 67 или 89123456789</p>
+                        </div>
 
-                        <div><label class="block text-sm font-semibold text-gray-200 mb-1">Желаемое направление <span class="text-red-400">*</span></label>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-200 mb-1">Желаемое направление <span class="text-red-400">*</span></label>
                             <div class="custom-select" id="customSelect">
                                 <div class="custom-select-trigger" id="customSelectTrigger">
                                     <span class="placeholder">Выберите направление</span>
@@ -646,12 +964,12 @@
                         <div id="captchaError" class="error-message hidden text-center"></div>
 
                         <div class="flex items-start gap-3 pt-2">
-                            <input type="checkbox" id="consent" class="mt-1 w-4 h-4 text-pink-500 border-white/30 rounded bg-white/5">
+                            <input type="checkbox" id="consent" class="mt-1 w-5 h-5 text-pink-500 border-white/30 rounded bg-white/5">
                             <label class="text-sm text-gray-300 leading-tight">Я согласен(на) на обработку персональных данных <span class="text-red-400">*</span></label>
                         </div>
                         <div id="consentError" class="error-message hidden pl-6"></div>
 
-                        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+                        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 active:scale-98">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
                             <span>Записаться на танцы</span>
                         </button>
@@ -665,31 +983,72 @@
         </section>
 
         <!-- Счётчик достижений -->
-        <section id="stats" class="mb-20 scroll-mt-20">
+        <section id="stats" class="mb-20 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.6s">
             <div class="glass-card p-8">
-                <div class="grid md:grid-cols-4 gap-8 text-center">
-                    <div><div class="counter-number text-4xl font-bold text-pink-400" id="studentCount">0</div><p class="text-gray-300 text-sm mt-2">Счастливых учеников</p></div>
-                    <div><div class="counter-number text-4xl font-bold text-pink-400" id="teacherCount">0</div><p class="text-gray-300 text-sm mt-2">Опытных преподавателей</p></div>
-                    <div><div class="counter-number text-4xl font-bold text-pink-400" id="styleCount">0</div><p class="text-gray-300 text-sm mt-2">Танцевальных стилей</p></div>
-                    <div><div class="counter-number text-4xl font-bold text-pink-400" id="eventCount">0</div><p class="text-gray-300 text-sm mt-2">Мероприятий в год</p></div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div>
+                        <div class="counter-number text-4xl font-bold text-pink-400" id="studentCount">0</div>
+                        <p class="text-gray-300 text-sm mt-2">Счастливых учеников</p>
+                    </div>
+                    <div>
+                        <div class="counter-number text-4xl font-bold text-pink-400" id="teacherCount">0</div>
+                        <p class="text-gray-300 text-sm mt-2">Опытных преподавателей</p>
+                    </div>
+                    <div>
+                        <div class="counter-number text-4xl font-bold text-pink-400" id="styleCount">0</div>
+                        <p class="text-gray-300 text-sm mt-2">Танцевальных стилей</p>
+                    </div>
+                    <div>
+                        <div class="counter-number text-4xl font-bold text-pink-400" id="eventCount">0</div>
+                        <p class="text-gray-300 text-sm mt-2">Мероприятий в год</p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Отзывы -->
-        <section id="reviews" class="mb-20 scroll-mt-20">
-            <div class="text-center mb-10"><span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold">Истории учеников</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Отзывы наших танцоров</h2>
-            <div class="w-24 h-1 bg-pink-400 mx-auto mt-3 rounded-full"></div></div>
+        <section id="reviews" class="mb-20 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.7s">
+            <div class="text-center mb-10">
+                <span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold">Истории учеников</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Отзывы наших танцоров</h2>
+                <div class="w-24 h-1 bg-pink-400 mx-auto mt-3 rounded-full"></div>
+            </div>
             <div class="grid md:grid-cols-3 gap-6">
-                <div class="testimonial-card p-6 rounded-2xl"><div class="flex items-center gap-3 mb-3"><div class="bg-pink-500/30 w-10 h-10 rounded-full flex items-center justify-center text-pink-200 font-bold">ЕК</div><div><p class="font-semibold text-white">Екатерина</p><div class="flex text-yellow-400 text-sm">★★★★★</div></div></div><p class="text-gray-300 text-sm">Пришла без опыта, через 2 месяца танцевала на сцене! Прекрасные тренеры, очень душевная атмосфера.</p></div>
-                <div class="testimonial-card p-6 rounded-2xl"><div class="flex items-center gap-3 mb-3"><div class="bg-pink-500/30 w-10 h-10 rounded-full flex items-center justify-center text-pink-200 font-bold">ДМ</div><div><p class="font-semibold text-white">Дмитрий</p><div class="flex text-yellow-400 text-sm">★★★★★</div></div></div><p class="text-gray-300 text-sm">Танцы изменили мою жизнь! Нашёл новых друзей, повысил уверенность. Рекомендую DanceFlow всем!</p></div>
-                <div class="testimonial-card p-6 rounded-2xl"><div class="flex items-center gap-3 mb-3"><div class="bg-pink-500/30 w-10 h-10 rounded-full flex items-center justify-center text-pink-200 font-bold">АП</div><div><p class="font-semibold text-white">Анастасия</p><div class="flex text-yellow-400 text-sm">★★★★★</div></div></div><p class="text-gray-300 text-sm">Лучшая школа! Индивидуальный подход, много практики, классные вечеринки. Хожу уже полгода!</p></div>
+                <div class="testimonial-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="bg-pink-500/30 w-10 h-10 rounded-full flex items-center justify-center text-pink-200 font-bold">ЕК</div>
+                        <div>
+                            <p class="font-semibold text-white">Екатерина</p>
+                            <div class="flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm">Пришла без опыта, через 2 месяца танцевала на сцене! Прекрасные тренеры, очень душевная атмосфера.</p>
+                </div>
+                <div class="testimonial-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="bg-pink-500/30 w-10 h-10 rounded-full flex items-center justify-center text-pink-200 font-bold">ДМ</div>
+                        <div>
+                            <p class="font-semibold text-white">Дмитрий</p>
+                            <div class="flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm">Танцы изменили мою жизнь! Нашёл новых друзей, повысил уверенность. Рекомендую DanceFlow всем!</p>
+                </div>
+                <div class="testimonial-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="bg-pink-500/30 w-10 h-10 rounded-full flex items-center justify-center text-pink-200 font-bold">АП</div>
+                        <div>
+                            <p class="font-semibold text-white">Анастасия</p>
+                            <div class="flex text-yellow-400 text-sm">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm">Лучшая школа! Индивидуальный подход, много практики, классные вечеринки. Хожу уже полгода!</p>
+                </div>
             </div>
         </section>
 
         <!-- FAQ -->
-        <section id="faq" class="mb-20 scroll-mt-20">
+        <section id="faq" class="mb-20 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.8s">
             <div class="text-center mb-10">
                 <span class="inline-block px-4 py-1.5 bg-pink-500/20 text-pink-200 rounded-full text-sm font-semibold backdrop-blur-sm">❓ FAQ</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Часто задаваемые вопросы</h2>
@@ -704,19 +1063,47 @@
         </section>
 
         <!-- Контакты -->
-        <section id="contact" class="mb-12 scroll-mt-20">
-            <div class="glass-card rounded-2xl p-8 md:p-10">
-                <div class="text-center mb-8"><h2 class="text-3xl font-extrabold text-white">Контакты</h2><div class="w-24 h-1 bg-pink-400 mx-auto mt-3 rounded-full"></div></div>
+        <section id="contact" class="mb-12 scroll-mt-20 animate-fadeInUp" style="animation-delay: 0.9s">
+            <div class="glass-card rounded-2xl p-6 md:p-10">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-extrabold text-white">Контакты</h2>
+                    <div class="w-24 h-1 bg-pink-400 mx-auto mt-3 rounded-full"></div>
+                </div>
                 <div class="grid md:grid-cols-3 gap-8 text-center mb-8">
-                    <div><div class="bg-white/10 p-3 rounded-full inline-flex mb-3"><svg class="h-6 w-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><p class="font-medium text-white">dance@danceflow.ru</p><p class="text-sm text-gray-300">Напишите нам</p></div>
-                    <div><div class="bg-white/10 p-3 rounded-full inline-flex mb-3"><svg class="h-6 w-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div><p class="font-medium text-white">+7 (495) 999-88-77</p><p class="text-sm text-gray-300">Ежедневно 10–21</p></div>
-                    <div><div class="bg-white/10 p-3 rounded-full inline-flex mb-3"><svg class="h-6 w-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><p class="font-medium text-white">Москва, ул. Тверская, 15</p><p class="text-sm text-gray-300">3 зала для занятий, парковка</p></div>
+                    <div class="flex flex-col items-center">
+                        <div class="bg-white/10 p-3 rounded-full inline-flex mb-3">
+                            <svg class="h-6 w-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                        <p class="font-medium text-white">dance@danceflow.ru</p>
+                        <p class="text-sm text-gray-300">Напишите нам</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="bg-white/10 p-3 rounded-full inline-flex mb-3">
+                            <svg class="h-6 w-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                        </div>
+                        <p class="font-medium text-white">+7 (495) 999-88-77</p>
+                        <p class="text-sm text-gray-300">Ежедневно 10–21</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="bg-white/10 p-3 rounded-full inline-flex mb-3">
+                            <svg class="h-6 w-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <p class="font-medium text-white">Москва, ул. Тверская, 15</p>
+                        <p class="text-sm text-gray-300">3 зала для занятий, парковка</p>
+                    </div>
                 </div>
                 
+                <!-- Кнопки соцсетей -->
                 <div class="flex justify-center gap-4 mb-8">
-                    <a href="https://t.me/share/url?url=https://danceflow.ru&text=Запишись на танцы в DanceFlow!" target="_blank" class="bg-[#0088cc] hover:bg-[#0077b3] w-10 h-10 rounded-full flex items-center justify-center transition"><svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
-                    <a href="https://vk.com/share.php?url=https://danceflow.ru" target="_blank" class="bg-[#0077ff] hover:bg-[#0066dd] w-10 h-10 rounded-full flex items-center justify-center transition"><svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
-                    <a href="https://wa.me/?text=Запишись на танцы в DanceFlow! https://danceflow.ru" target="_blank" class="bg-[#25D366] hover:bg-[#20b859] w-10 h-10 rounded-full flex items-center justify-center transition"><svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
+                    <a href="https://t.me/share/url?url=https://danceflow.ru&text=Запишись на танцы в DanceFlow!" target="_blank" class="bg-[#0088cc] hover:bg-[#0077b3] w-10 h-10 rounded-full flex items-center justify-center transition active:scale-95">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.065-1.226-.461-1.901-.904-1.056-.694-1.653-1.126-2.679-1.803-1.185-.782-.417-1.213.258-1.917.176-.184 3.239-2.97 3.299-3.222.007-.032.014-.152-.056-.215-.07-.063-.173-.042-.248-.024-.106.024-1.793 1.14-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.242-1.865-.441-.751-.244-1.349-.373-1.297-.787.027-.216.325-.437.893-.663 2.475-1.079 5.435-2.287 7.84-3.294 1.44-.603 2.634-.993 3.466-.927.293.024.632.119.828.413.148.222.181.548.12.966z"/></svg>
+                    </a>
+                    <a href="https://vk.com/share.php?url=https://danceflow.ru" target="_blank" class="bg-[#0077ff] hover:bg-[#0066dd] w-10 h-10 rounded-full flex items-center justify-center transition active:scale-95">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 17.839c-.168.9-.5 1.201-.82 1.23-.697.065-1.226-.461-1.901-.904-1.056-.694-1.653-1.126-2.679-1.803-1.185-.782-.417-1.213.258-1.917.176-.184 3.239-2.97 3.299-3.222.007-.032.014-.152-.056-.215-.07-.063-.173-.042-.248-.024-.106.024-1.793 1.14-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.242-1.865-.441-.751-.244-1.349-.373-1.297-.787.027-.216.325-.437.893-.663 2.475-1.079 5.435-2.287 7.84-3.294 1.44-.603 2.634-.993 3.466-.927.293.024.632.119.828.413.148.222.181.548.12.966z"/></svg>
+                    </a>
+                    <a href="https://wa.me/?text=Запишись на танцы в DanceFlow! https://danceflow.ru" target="_blank" class="bg-[#25D366] hover:bg-[#20b859] w-10 h-10 rounded-full flex items-center justify-center transition active:scale-95">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 17.839c-.168.9-.5 1.201-.82 1.23-.697.065-1.226-.461-1.901-.904-1.056-.694-1.653-1.126-2.679-1.803-1.185-.782-.417-1.213.258-1.917.176-.184 3.239-2.97 3.299-3.222.007-.032.014-.152-.056-.215-.07-.063-.173-.042-.248-.024-.106.024-1.793 1.14-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.242-1.865-.441-.751-.244-1.349-.373-1.297-.787.027-.216.325-.437.893-.663 2.475-1.079 5.435-2.287 7.84-3.294 1.44-.603 2.634-.993 3.466-.927.293.024.632.119.828.413.148.222.181.548.12.966z"/></svg>
+                    </a>
                 </div>
 
                 <div id="dance-map"></div>
@@ -728,9 +1115,15 @@
     <footer class="bg-black/40 backdrop-blur-sm text-gray-400 py-6 text-center text-sm border-t border-white/10">
         <p>© 2025 DanceFlow — Школа танцев. Вдохновение в движении.</p>
         <div class="flex justify-center gap-4 mt-4">
-            <a href="https://t.me/share/url?url=https://danceflow.ru&text=Запишись на танцы в DanceFlow!" target="_blank" class="bg-[#0088cc] hover:bg-[#0077b3] w-8 h-8 rounded-full flex items-center justify-center transition"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
-            <a href="https://vk.com/share.php?url=https://danceflow.ru" target="_blank" class="bg-[#0077ff] hover:bg-[#0066dd] w-8 h-8 rounded-full flex items-center justify-center transition"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
-            <a href="https://wa.me/?text=Запишись на танцы в DanceFlow! https://danceflow.ru" target="_blank" class="bg-[#25D366] hover:bg-[#20b859] w-8 h-8 rounded-full flex items-center justify-center transition"><svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg></a>
+            <a href="https://t.me/share/url?url=https://danceflow.ru&text=Запишись на танцы в DanceFlow!" target="_blank" class="bg-[#0088cc] hover:bg-[#0077b3] w-8 h-8 rounded-full flex items-center justify-center transition active:scale-95">
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg>
+            </a>
+            <a href="https://vk.com/share.php?url=https://danceflow.ru" target="_blank" class="bg-[#0077ff] hover:bg-[#0066dd] w-8 h-8 rounded-full flex items-center justify-center transition active:scale-95">
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg>
+            </a>
+            <a href="https://wa.me/?text=Запишись на танцы в DanceFlow! https://danceflow.ru" target="_blank" class="bg-[#25D366] hover:bg-[#20b859] w-8 h-8 rounded-full flex items-center justify-center transition active:scale-95">
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0z"/></svg>
+            </a>
         </div>
         <p class="text-xs text-gray-500 mt-2">🛡️ Защита от DDoS и спама активна</p>
     </footer>
@@ -739,104 +1132,36 @@
 <div id="toastMsg" class="toast-notify"></div>
 
 <script>
-    // ========== DDOS ЗАЩИТА ==========
+    // ========== МОБИЛЬНОЕ МЕНЮ ==========
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
     
-    // 1. Защита от автоматических отправок (honeypot)
-    const honeypot = document.createElement('input');
-    honeypot.type = 'text';
-    honeypot.name = 'website';
-    honeypot.id = 'website';
-    honeypot.style.display = 'none';
-    honeypot.autocomplete = 'off';
-    document.getElementById('enrollForm').appendChild(honeypot);
+    function toggleMenu() {
+        burger.classList.toggle('open');
+        mobileMenu.classList.toggle('open');
+        menuOverlay.classList.toggle('open');
+        document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    }
     
-    // 2. Защита от быстрых повторных отправок
-    let submitCount = 0;
-    let lastSubmitTime = 0;
-    const MAX_SUBMITS_PER_MINUTE = 3;
-    const SUBMIT_WINDOW = 60000;
+    burger.addEventListener('click', toggleMenu);
+    menuOverlay.addEventListener('click', toggleMenu);
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+    });
     
-    // 3. Защита от ботов через User-Agent (на клиенте)
-    function isBot() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        const botPatterns = ['bot', 'crawler', 'spider', 'scraper', 'headless', 'selenium', 'puppeteer', 'phantom'];
-        for (let pattern of botPatterns) {
-            if (userAgent.includes(pattern)) return true;
+    // Закрытие меню при свайпе влево
+    let touchStartX = 0;
+    mobileMenu.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+    });
+    mobileMenu.addEventListener('touchmove', (e) => {
+        const touchEndX = e.touches[0].clientX;
+        if (touchStartX - touchEndX > 50) {
+            toggleMenu();
         }
-        return false;
-    }
-    
-    // 4. Защита от автоматического заполнения форм
-    function checkAutoFill() {
-        const inputs = ['lastName', 'firstName', 'email', 'phone'];
-        let autoFillDetected = false;
-        inputs.forEach(id => {
-            const input = document.getElementById(id);
-            if (input && input.value.length > 0 && document.activeElement !== input) {
-                const event = new Event('input', { bubbles: true });
-                input.dispatchEvent(event);
-            }
-        });
-        return autoFillDetected;
-    }
-    
-    // 5. Защита от подмены DOM (MutationObserver)
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 50) {
-                console.warn('DDOS Protection: Множественные узлы добавлены');
-                document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>Доступ временно ограничен</h1><p>Обнаружена подозрительная активность. Пожалуйста, обновите страницу.</p></div>';
-            }
-        });
     });
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    // 6. Защита от фреймов (clickjacking)
-    if (window.self !== window.top) {
-        window.top.location = window.self.location;
-    }
-    
-    // 7. Защита от консольных атак
-    const consoleMethods = ['log', 'warn', 'error', 'info'];
-    consoleMethods.forEach(method => {
-        const original = console[method];
-        console[method] = function(...args) {
-            if (args[0] && args[0].toString().includes('hack')) return;
-            original.apply(console, args);
-        };
-    });
-    
-    // 8. Защита от слишком быстрого скроллинга
-    let scrollCount = 0;
-    let lastScrollTime = 0;
-    window.addEventListener('scroll', () => {
-        const now = Date.now();
-        if (now - lastScrollTime < 50) {
-            scrollCount++;
-            if (scrollCount > 100) {
-                document.body.style.overflow = 'hidden';
-                alert('Обнаружена подозрительная активность. Страница заблокирована.');
-            }
-        } else {
-            scrollCount = 0;
-        }
-        lastScrollTime = now;
-    });
-    
-    // 9. Генерация CSRF токена
-    let csrfToken = '';
-    function generateCSRFToken() {
-        csrfToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-        sessionStorage.setItem('csrf_token', csrfToken);
-        return csrfToken;
-    }
-    generateCSRFToken();
-    
-    // 10. Проверка CSRF токена при отправке
-    function validateCSRFToken() {
-        const storedToken = sessionStorage.getItem('csrf_token');
-        return storedToken === csrfToken;
-    }
     
     // ========== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ==========
     const themeToggle = document.getElementById('themeToggle');
@@ -855,7 +1180,7 @@
             themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
         }
     });
-
+    
     // ========== ТАЙМЕР ==========
     function startTimer() {
         const now = new Date();
@@ -876,7 +1201,7 @@
         setInterval(updateTimer, 1000);
     }
     startTimer();
-
+    
     // ========== СЧЁТЧИК ДОСТИЖЕНИЙ ==========
     function animateCounter(element, start, end, duration) {
         let startTimestamp = null;
@@ -888,7 +1213,7 @@
         };
         window.requestAnimationFrame(step);
     }
-
+    
     const observerStats = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -902,14 +1227,14 @@
     });
     const statsSection = document.getElementById('stats');
     if (statsSection) observerStats.observe(statsSection);
-
+    
     // ========== ДИНАМИЧЕСКИЙ ФОН ==========
     const glowDiv = document.getElementById('mouseGlow');
     document.addEventListener('mousemove', (e) => {
         glowDiv.style.setProperty('--x', `${(e.clientX / window.innerWidth) * 100}%`);
         glowDiv.style.setProperty('--y', `${(e.clientY / window.innerHeight) * 100}%`);
     });
-
+    
     // ========== КАСТОМНЫЙ СЕЛЕКТ ==========
     const customSelect = document.getElementById('customSelect');
     const trigger = document.getElementById('customSelectTrigger');
@@ -917,7 +1242,7 @@
     const hiddenInput = document.getElementById('direction');
     const placeholderSpan = trigger.querySelector('.placeholder');
     const selectedValueSpan = trigger.querySelector('.selected-value');
-
+    
     if (trigger && dropdown) {
         trigger.addEventListener('click', (e) => { e.stopPropagation(); trigger.classList.toggle('open'); dropdown.classList.toggle('show'); });
         document.addEventListener('click', () => { trigger.classList.remove('open'); dropdown.classList.remove('show'); });
@@ -937,12 +1262,12 @@
             });
         });
     }
-
+    
     // ========== SUPABASE ==========
     const SUPABASE_URL = 'https://adkdzogbtsgtsvdawbit.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFka2R6b2didHNndHN2ZGF3Yml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjQ4MDIsImV4cCI6MjA5MTMwMDgwMn0.q-FmLi_xIRvQanyJn5PGGu4xe-_gkxOWDSqIgSkPrWE';
     let supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+    
     // ========== DOM ЭЛЕМЕНТЫ ФОРМЫ ==========
     const form = document.getElementById('enrollForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -952,15 +1277,14 @@
     const emailInput = document.getElementById('email');
     const phoneInput = document.getElementById('phone');
     const consentCheck = document.getElementById('consent');
-    const securityNotice = document.getElementById('securityNotice');
-
+    
     function showToast(msg, isError = false) {
         toast.textContent = msg;
         toast.classList.add('toast-show');
         toast.style.backgroundColor = isError ? "#dc2626" : "#1f2937";
         setTimeout(() => toast.classList.remove('toast-show'), 3500);
     }
-
+    
     function clearErrors() {
         const errorIds = ['lastNameError', 'firstNameError', 'emailError', 'phoneError', 'directionError', 'consentError', 'captchaError'];
         errorIds.forEach(id => {
@@ -970,7 +1294,7 @@
         [lastNameInput, firstNameInput, emailInput, phoneInput].forEach(inp => inp && inp.classList.remove('input-error'));
         if (customSelect) customSelect.classList.remove('input-error');
     }
-
+    
     function showFieldError(elementId, message) {
         const errorDiv = document.getElementById(elementId);
         if (errorDiv) {
@@ -983,58 +1307,23 @@
         if (elementId === 'phoneError' && phoneInput) phoneInput.classList.add('input-error');
         if (elementId === 'directionError' && customSelect) customSelect.classList.add('input-error');
     }
-
+    
     function validatePhone(phone) {
         let cleaned = phone.replace(/[\s\-\(\)]/g, '');
         const digits = cleaned.replace(/\D/g, '');
         return (digits.length === 11 && (digits.startsWith('7') || digits.startsWith('8'))) || digits.length === 10;
     }
-
-    // DDOS проверка перед отправкой
-    function ddosCheck() {
-        // Проверка на бота
-        if (isBot()) {
-            showToast("❌ Обнаружен бот. Доступ запрещён.", true);
-            securityNotice.classList.remove('hidden');
-            return false;
-        }
-        
-        // Проверка частоты отправок
-        const now = Date.now();
-        if (now - lastSubmitTime < SUBMIT_WINDOW) {
-            submitCount++;
-            if (submitCount > MAX_SUBMITS_PER_MINUTE) {
-                showToast("❌ Слишком много попыток. Подождите минуту.", true);
-                securityNotice.classList.remove('hidden');
-                return false;
-            }
-        } else {
-            submitCount = 1;
-        }
-        lastSubmitTime = now;
-        
-        // Проверка honeypot
-        const honeypotValue = document.getElementById('website')?.value;
-        if (honeypotValue && honeypotValue.length > 0) {
-            console.warn('Honeypot triggered');
-            return false;
-        }
-        
-        // Проверка CSRF токена
-        if (!validateCSRFToken()) {
-            console.warn('CSRF validation failed');
-            return false;
-        }
-        
-        return true;
-    }
-
+    
+    let lastSubmitTime = 0;
+    
     async function validateForm() {
         let isValid = true;
         clearErrors();
         
-        // DDOS проверка
-        if (!ddosCheck()) return false;
+        if (Date.now() - lastSubmitTime < 30000) {
+            showFieldError('emailError', 'Пожалуйста, подождите 30 секунд');
+            return false;
+        }
         
         if (!lastNameInput.value.trim()) { showFieldError('lastNameError', 'Укажите фамилию'); isValid = false; }
         if (!firstNameInput.value.trim()) { showFieldError('firstNameError', 'Укажите имя'); isValid = false; }
@@ -1051,14 +1340,13 @@
         if (!hiddenInput.value) { showFieldError('directionError', 'Выберите направление'); isValid = false; }
         if (!consentCheck.checked) { showFieldError('consentError', 'Необходимо дать согласие'); isValid = false; }
         
-        // reCAPTCHA v3 проверка
         return new Promise((resolve) => {
             if (typeof grecaptcha !== 'undefined') {
                 grecaptcha.ready(async () => {
                     try {
                         const token = await grecaptcha.execute('6LeXFbAsAAAAAB6jOd7_ULrh7hEClTC73R5WvIKx', { action: 'submit' });
                         if (token) {
-                            console.log("reCAPTCHA v3 токен получен");
+                            lastSubmitTime = Date.now();
                             resolve(isValid);
                         } else {
                             document.getElementById('captchaError').innerHTML = 'Ошибка верификации. Попробуйте снова.';
@@ -1077,7 +1365,7 @@
             }
         });
     }
-
+    
     function resetFormFields() {
         if (lastNameInput) lastNameInput.value = "";
         if (firstNameInput) firstNameInput.value = "";
@@ -1091,10 +1379,8 @@
             document.querySelectorAll('.custom-select-option').forEach(opt => opt.classList.remove('selected'));
         }
         clearErrors();
-        // Обновляем CSRF токен
-        generateCSRFToken();
     }
-
+    
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1106,8 +1392,7 @@
                 first_name: firstNameInput.value.trim(),
                 email: emailInput.value.trim(),
                 phone: phoneInput.value.trim(),
-                direction: hiddenInput.value,
-                csrf_token: csrfToken
+                direction: hiddenInput.value
             };
             
             submitBtn.disabled = true;
@@ -1129,7 +1414,7 @@
             }
         });
     }
-
+    
     // ========== СБРОС ОШИБОК ПРИ ФОКУСЕ ==========
     [lastNameInput, firstNameInput, emailInput, phoneInput].forEach(field => {
         if (field) {
@@ -1144,7 +1429,7 @@
     if (consentCheck) {
         consentCheck.addEventListener('change', () => document.getElementById('consentError')?.classList.add('hidden'));
     }
-
+    
     // ========== ЯНДЕКС КАРТЫ ==========
     if (typeof ymaps !== 'undefined') {
         ymaps.ready(() => {
